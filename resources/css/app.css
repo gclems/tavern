@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+@import 'shanty-ui/css/shanty-ui.css';
+@import 'shanty-ui/css/themes/default.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+:root {
+    --info: oklch(0.57 0.148 230.69);
+    --info-foreground: oklch(0.25 0.0419 230.69);
+
+    --success: oklch(0.58 0.1751 145.99);
+    --success-foreground: oklch(1 0 0);
+
+    --warning: oklch(0.7 0.1603 60.22);
+    --warning-foreground: oklch(0.27 0.0715 60.22);
+
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(1 0 0);
+
+    --dnd-background: oklch(0.9536 0.0091 78.28);
+    --dnd-foreground: oklch(0.3211 0 0);
+    --dnd-primary: oklch(0.5177 0.1411 47.77);
+}
+
+@theme inline {
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-dnd-background: var(--dnd-background);
+    --color-dnd-foreground: var(--dnd-foreground);
+    --color-dnd-primary: var(--dnd-primary);
+}
