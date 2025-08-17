@@ -12,7 +12,7 @@ import { NoteTreeItem } from '@/types/note-tree-item';
 import { CreateNoteButton } from './create-note-button';
 import { NoteNode } from './note-node';
 
-function NoteTrees({
+function NoteArborist({
     campaign,
     noteCategories,
     notes,
@@ -101,4 +101,4 @@ function NoteTrees({
     );
 }
 
-export { NoteTrees };
+export { NoteArborist };

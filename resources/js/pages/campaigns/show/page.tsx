@@ -6,7 +6,7 @@ import { Note } from '@/types/models/note';
 import { NoteCategory } from '@/types/models/noteCategory';
 
 import { NoteViewer } from './note-viewer';
-import { NoteTrees } from './notes-trees';
+import { NoteArborist } from './notes-arborist';
 
 interface Props {
     campaign: Campaign;
@@ -20,7 +20,7 @@ const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes })
     return (
         <PrivateLayout title={campaign.name} menuKey="campaigns">
             <div className="flex h-full w-full">
-                <NoteTrees
+                <NoteArborist
                     campaign={campaign}
                     noteCategories={noteCategories}
                     notes={notes}
