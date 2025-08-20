@@ -14,16 +14,20 @@ class StoreNoteAction
         ?int $noteId = null,
         Privacy $privacy = Privacy::Public
     ): Note {
+        $sortOrder = Note::where('campaign_id', $campaignId)
+            ->where('note_category_id', $noteCategoryId)
+            ->where('note_id', $noteId)
+            ->max('sort_order');
+
+        $sortOrder = $sortOrder !== null ? $sortOrder + 1 : 0;
+
         $note = Note::create([
             'name' => $name,
             'campaign_id' => $campaignId,
             'note_category_id' => $noteCategoryId,
             'note_id' => $noteId,
             'privacy' => $privacy,
-            'sort_order' => Note::where('campaign_id', $campaignId)
-                ->where('note_category_id', $noteCategoryId)
-                ->where('note_id', $noteId)
-                ->max('sort_order') + 1,
+            'sort_order' => $sortOrder,
         ]);
 
         return $note;

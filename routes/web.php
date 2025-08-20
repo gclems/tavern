@@ -30,10 +30,9 @@ Route::middleware('auth')->group(function () {
             'destroy',
         ]);
 
-    Route::resource('campaigns.notes', NotesController::class)
-        ->only([
-            'store',
-            'update',
-            'destroy',
-        ]);
+    Route::post('campaigns/{campaign}/notes', [NotesController::class, 'store'])
+        ->name('campaigns.notes.store');
+
+    Route::post('notes/{note}/move', [NotesController::class, 'move'])
+        ->name('notes.move');
 });

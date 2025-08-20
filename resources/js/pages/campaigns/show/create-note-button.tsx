@@ -50,7 +50,7 @@ function CreateNoteButton({ campaignId, noteCategoryId, noteId }: { campaignId: 
             }}
         >
             <SimpleSheet.Trigger>
-                <Button variant="ghost">
+                <Button variant="link">
                     <PlusIcon />
                 </Button>
             </SimpleSheet.Trigger>

@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { MaximizeIcon, MinimizeIcon } from 'lucide-react';
 import { Button, cn } from 'shanty-ui';
 
-import { Note } from '@/types/models/note';
+import { useCampaign } from './campaign-provider';
 
-function NoteViewer({ note }: { note: Note | null }) {
+function NoteViewer() {
     const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
+
+    const { selectedNote } = useCampaign();
 
     return (
         <div
@@ -15,10 +17,10 @@ function NoteViewer({ note }: { note: Note | null }) {
                 'max-h-full min-h-full w-1/2 max-w-[600px]': !fullScreenMode,
             })}
         >
-            {note && (
+            {selectedNote && (
                 <div>
                     <div className="flex items-center justify-between px-4 py-2">
-                        <div className="text-dnd-primary text-2xl font-bold">{note.name}</div>
+                        <div className="text-dnd-primary text-2xl font-bold">{selectedNote.name}</div>
                         <Button variant="ghost" onClick={() => setFullScreenMode(!fullScreenMode)}>
                             {fullScreenMode ? <MinimizeIcon /> : <MaximizeIcon />}
                         </Button>
