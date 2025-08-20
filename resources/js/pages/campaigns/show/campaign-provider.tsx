@@ -1,7 +1,5 @@
 import { useContext, createContext, useMemo, useState, useCallback } from 'react';
 
-import { MoveHandler } from 'react-arborist';
-
 import { Campaign } from '@/types/models/campaign';
 import { Note } from '@/types/models/note';
 import { NoteCategory } from '@/types/models/noteCategory';
@@ -11,9 +9,10 @@ import { NoteTreeItem } from '@/types/note-tree-item';
 type CampaignContextType = {
     campaign: Campaign;
     treeColumns: NoteCategoryTreeItem[];
-    selectedNote?: Note | null;
-    handleSelectNote?: (note: Note | null) => void;
-    handleNoteTreeItemMove: MoveHandler<NoteTreeItem>;
+    treeItems: Record<string, NoteCategoryTreeItem | NoteTreeItem>;
+    selectedNote: Note | null;
+    handleSelectNote: (note: Note | null) => void;
+    // handleNoteTreeItemMove: MoveHandler<NoteTreeItem>;
 };
 
 type MoveNoteType = {
@@ -45,11 +44,7 @@ function CampaignProvider({
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
     const treeColumns: NoteCategoryTreeItem[] = useMemo(() => {
-        // create columns & and a map of noteCategory.id → NoteCategoryTreeItem
         const columns: NoteCategoryTreeItem[] = [];
-        const columnsById: Record<string, NoteCategoryTreeItem> = {};
-
-        // create NoteCategoryTreeItem and put them in columns
         noteCategories
             .sort((a, b) => a.sort_order - b.sort_order)
             .forEach((category) => {
@@ -61,8 +56,20 @@ function CampaignProvider({
                     data: category,
                 };
                 columns.push(treeItem);
-                columnsById[treeItemId] = treeItem;
             });
+        return columns;
+    }, [noteCategories]);
+
+    const treeItems: Record<string, NoteCategoryTreeItem | NoteTreeItem> = useMemo(() => {
+        // create columns & and a map of noteCategory.id → NoteCategoryTreeItem
+        const allItems: Record<string, NoteCategoryTreeItem | NoteTreeItem> = {};
+        const columnsById: Record<string, NoteCategoryTreeItem> = {};
+
+        // add treeColumns in allItems & create a map id -> item
+        treeColumns.forEach((item) => {
+            allItems[item.id] = item;
+            columnsById[item.id] = item;
+        });
 
         // create a map of note.id → NoteTreeItem
         const noteMap: Record<string, NoteTreeItem> = {};
@@ -70,26 +77,29 @@ function CampaignProvider({
             .sort((a, b) => a.sort_order - b.sort_order)
             .forEach((note) => {
                 const treeItemId = getNoteTreeItemId(note.id);
-                noteMap[treeItemId] = {
+                const treeItem: NoteTreeItem = {
                     id: treeItemId,
                     name: note.name,
                     children: [],
                     data: note,
                 };
+
+                allItems[treeItemId] = treeItem;
+                noteMap[treeItemId] = treeItem;
             });
 
         // attach notes to parents (or to category root if no parent)
         for (const note of notes) {
-            const treeNote = noteMap[getNoteTreeItemId(note.id)];
+            const treeNoteId = getNoteTreeItemId(note.id);
             if (note.note_id) {
-                noteMap[getNoteTreeItemId(note.note_id)]?.children.push(treeNote);
+                noteMap[getNoteTreeItemId(note.note_id)]?.children.push(treeNoteId);
             } else {
-                columnsById[getCategoryTreeItemId(note.note_category_id)].children.push(treeNote);
+                columnsById[getCategoryTreeItemId(note.note_category_id)].children.push(treeNoteId);
             }
         }
 
-        return columns;
-    }, [noteCategories, notes]);
+        return allItems;
+    }, [treeColumns, notes]);
 
     const handleSelectNote = useCallback(
         (note: Note | null) => {
@@ -102,32 +112,41 @@ function CampaignProvider({
         [selectedNote],
     );
 
-    const handleNoteTreeItemMove: MoveHandler<NoteTreeItem> = useCallback(
-        async ({ dragNodes, index, parentNode }) => {
-            console.log('MOVE NOTE', { dragNodes, index, parentNode });
+    // const handleNoteTreeItemMove: MoveHandler<NoteTreeItem> = useCallback(
+    //     async ({ dragNodes, index, parentNode }) => {
+    //         console.log('MOVE NOTE', { dragNodes, index, parentNode });
 
-            // fix react-arborist index weirdness
-            // if (index === 1) {
-            // }
+    //         const note = dragNodes[0].data.data;
+    //         let parentNoteCategory: NoteCategory | undefined = undefined;
+    //         let parentNote: Note | undefined = undefined;
 
-            const note = dragNodes[0].data.data;
-            let parentNoteCategory: NoteCategory | undefined = undefined;
-            let parentNote: Note | undefined = undefined;
+    //         if (!parentNode) {
+    //             // the note is moved at the root of its own category
+    //             parentNoteCategory = noteCategories.find((category) => category.id === note.note_category_id) || undefined;
+    //         } else {
+    //             // the note is moved into another note
+    //             parentNote = notes.find((n) => n.id === parentNode.data.data.id) || undefined;
+    //         }
 
-            if (!parentNode) {
-                // the note is moved at the root of its own category
-                parentNoteCategory = noteCategories.find((category) => category.id === note.note_category_id) || undefined;
-            } else {
-                // the note is moved into another note
-                parentNote = notes.find((n) => n.id === parentNode.data.data.id) || undefined;
-            }
+    //         await onNoteMove?.({ note, parentNoteCategory, parentNote, sort_order: index });
+    //     },
+    //     [noteCategories, notes, onNoteMove],
+    // );
 
-            await onNoteMove?.({ note, parentNoteCategory, parentNote, sort_order: index });
-        },
-        [noteCategories, notes, onNoteMove],
+    return (
+        <CampaignContext
+            value={{
+                campaign,
+                treeColumns,
+                treeItems,
+                selectedNote,
+                handleSelectNote,
+                // handleNoteTreeItemMove
+            }}
+        >
+            {children}
+        </CampaignContext>
     );
-
-    return <CampaignContext value={{ campaign, treeColumns, selectedNote, handleSelectNote, handleNoteTreeItemMove }}>{children}</CampaignContext>;
 }
 
 function useCampaign(): CampaignContextType {

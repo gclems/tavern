@@ -28,6 +28,8 @@
         "typescript-eslint": "^8.23.0"
     },
     "dependencies": {
+        "@headless-tree/core": "^1.4.0",
+        "@headless-tree/react": "^1.4.0",
         "@headlessui/react": "^2.2.0",
         "@inertiajs/react": "^2.1.0",
         "@tailwindcss/vite": "^4.1.11",
@@ -40,7 +42,6 @@
         "laravel-vite-plugin": "^2.0",
         "lucide-react": "^0.475.0",
         "react": "^19.0.0",
-        "react-arborist": "3.4.1",
         "react-dom": "^19.0.0",
         "shanty-ui": "^0.0.19",
         "tailwind-merge": "^3.0.1",
