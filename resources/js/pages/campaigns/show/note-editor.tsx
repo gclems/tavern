@@ -2,7 +2,7 @@ import { FormEventHandler } from 'react';
 
 import { useForm } from '@inertiajs/react';
 import { CheckIcon, XIcon } from 'lucide-react';
-import { Button, cn, Input, Label, RadioTab, useToastManager } from 'shanty-ui';
+import { Button, cn, Input, Label, RadioTab, Textarea, useToastManager } from 'shanty-ui';
 
 import FormField from '@/components/form-field';
 import InputError from '@/components/input-error';
@@ -73,7 +73,7 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                         'fixed top-0 right-1/2 bottom-0 left-0 p-4',
                     )}
                 >
-                    <div className="space-y-4">
+                    <div className="flex h-full flex-col space-y-4">
                         <FormField>
                             <Label htmlFor="name" required>
                                 Nom
@@ -105,16 +105,16 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                             <InputError message={errors.name} />
                         </FormField>
 
-                        <FormField>
-                            <Input
+                        <FormField className="flex grow flex-col">
+                            <Textarea
                                 id="content"
                                 name="content"
-                                type="text"
                                 required
                                 autoFocus
                                 tabIndex={1}
                                 value={data.content}
                                 autoComplete="off"
+                                className="h-full"
                                 onChange={(e) => setData('content', e.target.value)}
                                 disabled={processing}
                                 placeholder="Nom"
