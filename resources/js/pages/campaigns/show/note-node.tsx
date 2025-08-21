@@ -2,26 +2,26 @@ import { ItemInstance } from '@headless-tree/core';
 import { SquareMinusIcon, SquarePlusIcon } from 'lucide-react';
 import { Button, cn } from 'shanty-ui';
 
+import { HeadlessTreeItem } from '@/types/headless-tree-item';
 import { Note } from '@/types/models/note';
-import { NoteCategoryTreeItem } from '@/types/note-category-tree-item';
-import { NoteTreeItem } from '@/types/note-tree-item';
 
 import { useCampaign } from './campaign-provider';
 import { CreateNoteButton } from './create-note-button';
 
-function NoteNode({ item }: { item: ItemInstance<NoteCategoryTreeItem | NoteTreeItem> }) {
+function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
     const { campaign, selectedNote, handleSelectNote } = useCampaign();
 
     const note: Note = item.getItemData().data as Note;
 
     return (
         <div className="flex min-w-full justify-start">
-            {Array.from({ length: item.getItemMeta().level }).map((_, i) => (
-                <div key={i} className="border-dnd-primary/20 w-3 border-r" />
+            {Array.from({ length: item.getItemMeta().level + 1 }).map((_, i) => (
+                <div key={i} className="border-border w-3 shrink-0 grow-0 border-r border-dotted" />
             ))}
             <div
-                className={cn('flex w-full items-center gap-x-2 border-2 border-l-4 border-transparent', {
-                    'bg-dnd-background border-dnd-primary': selectedNote === note,
+                className={cn('hover:bg-dnd-primary/10 flex w-full items-center gap-x-1 overflow-auto border-2 border-l-4 border-transparent', {
+                    'bg-dnd-background border-dnd-primary text-dnd-primary': selectedNote === note,
+                    'bg-dnd-primary/20': item.isDragTarget(),
                 })}
             >
                 <Button

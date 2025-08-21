@@ -8,6 +8,7 @@ export interface Note {
     note_category_id: number;
     note_id?: number;
     name: string;
+    content: string;
     sort_order: number;
     privacy: Privacy;
 

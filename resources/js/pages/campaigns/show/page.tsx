@@ -22,6 +22,7 @@ const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes })
             parentNoteId: parentNote?.id,
             sort_order,
         });
+
         return true;
     };
 

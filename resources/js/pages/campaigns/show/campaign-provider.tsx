@@ -1,5 +1,6 @@
-import { useContext, createContext, useMemo, useState, useCallback } from 'react';
+import { useContext, createContext, useMemo, useState, useCallback, useEffect } from 'react';
 
+import { HeadlessTreeItem } from '@/types/headless-tree-item';
 import { Campaign } from '@/types/models/campaign';
 import { Note } from '@/types/models/note';
 import { NoteCategory } from '@/types/models/noteCategory';
@@ -9,10 +10,11 @@ import { NoteTreeItem } from '@/types/note-tree-item';
 type CampaignContextType = {
     campaign: Campaign;
     treeColumns: NoteCategoryTreeItem[];
-    treeItems: Record<string, NoteCategoryTreeItem | NoteTreeItem>;
+    treeItems: Record<string, HeadlessTreeItem>;
     selectedNote: Note | null;
+    getTreeItemByNoteId: (noteId: number) => NoteTreeItem | null;
     handleSelectNote: (note: Note | null) => void;
-    // handleNoteTreeItemMove: MoveHandler<NoteTreeItem>;
+    handleNoteTreeItemMove: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number) => Promise<void> | void;
 };
 
 type MoveNoteType = {
@@ -60,9 +62,9 @@ function CampaignProvider({
         return columns;
     }, [noteCategories]);
 
-    const treeItems: Record<string, NoteCategoryTreeItem | NoteTreeItem> = useMemo(() => {
+    const treeItems: Record<string, HeadlessTreeItem> = useMemo(() => {
         // create columns & and a map of noteCategory.id → NoteCategoryTreeItem
-        const allItems: Record<string, NoteCategoryTreeItem | NoteTreeItem> = {};
+        const allItems: Record<string, HeadlessTreeItem> = {};
         const columnsById: Record<string, NoteCategoryTreeItem> = {};
 
         // add treeColumns in allItems & create a map id -> item
@@ -101,6 +103,21 @@ function CampaignProvider({
         return allItems;
     }, [treeColumns, notes]);
 
+    useEffect(() => {
+        // update the selectedNote if the items have changed
+        if (selectedNote) {
+            const updatedNote = treeItems[getNoteTreeItemId(selectedNote.id)]?.data;
+            setSelectedNote(updatedNote);
+        }
+    }, [selectedNote, treeItems]);
+
+    const getTreeItemByNoteId = useCallback(
+        (noteId: number) => {
+            return treeItems[getNoteTreeItemId(noteId)] || null;
+        },
+        [treeItems],
+    );
+
     const handleSelectNote = useCallback(
         (note: Note | null) => {
             if (note === selectedNote) {
@@ -112,26 +129,17 @@ function CampaignProvider({
         [selectedNote],
     );
 
-    // const handleNoteTreeItemMove: MoveHandler<NoteTreeItem> = useCallback(
-    //     async ({ dragNodes, index, parentNode }) => {
-    //         console.log('MOVE NOTE', { dragNodes, index, parentNode });
+    const handleNoteTreeItemMove = useCallback(
+        async (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number = 0) => {
+            const note = movedItem.data;
 
-    //         const note = dragNodes[0].data.data;
-    //         let parentNoteCategory: NoteCategory | undefined = undefined;
-    //         let parentNote: Note | undefined = undefined;
+            const targetNoteCategory = treeColumns.find((column) => column.id === targetTreeItem.id)?.data;
+            const targetNote = (!targetNoteCategory && treeItems[targetTreeItem.id]?.data) ?? undefined;
 
-    //         if (!parentNode) {
-    //             // the note is moved at the root of its own category
-    //             parentNoteCategory = noteCategories.find((category) => category.id === note.note_category_id) || undefined;
-    //         } else {
-    //             // the note is moved into another note
-    //             parentNote = notes.find((n) => n.id === parentNode.data.data.id) || undefined;
-    //         }
-
-    //         await onNoteMove?.({ note, parentNoteCategory, parentNote, sort_order: index });
-    //     },
-    //     [noteCategories, notes, onNoteMove],
-    // );
+            onNoteMove?.({ note, parentNoteCategory: targetNoteCategory, parentNote: targetNote, sort_order: index });
+        },
+        [onNoteMove, treeColumns, treeItems],
+    );
 
     return (
         <CampaignContext
@@ -140,8 +148,9 @@ function CampaignProvider({
                 treeColumns,
                 treeItems,
                 selectedNote,
+                getTreeItemByNoteId,
                 handleSelectNote,
-                // handleNoteTreeItemMove
+                handleNoteTreeItemMove,
             }}
         >
             {children}

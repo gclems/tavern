@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Note;
 use App\Models\NoteCategory;
-use Illuminate\Support\Facades\Log;
 
 class NoteService
 {
@@ -16,6 +15,7 @@ class NoteService
         ?NoteCategory $targetCategory = null,
         ?Note $targetNote = null,
     ): void {
+
         $formerOrder = $note->sort_order;
 
         // detect if the note need to change one of its parents (note or category)
@@ -66,11 +66,6 @@ class NoteService
             } else {
                 $targetCategoryId = $targetCategory->id;
             }
-
-            Log::debug('CHANGE PARENT', [
-                'target note' => $targetNoteId,
-                'target cat' => $targetCategoryId,
-            ]);
 
             // "adjust former siblings' sort_order
             Note::where('id', '!=', $note->id)

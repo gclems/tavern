@@ -30,7 +30,6 @@ function CreateNoteButton({ campaignId, noteCategoryId, noteId }: { campaignId: 
         e.preventDefault();
 
         post(route('campaigns.notes.store', campaignId), {
-            preserveState: false,
             onSuccess: () => {
                 setOpened(false);
             },
