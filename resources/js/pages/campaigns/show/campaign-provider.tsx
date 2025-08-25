@@ -13,6 +13,7 @@ type CampaignContextType = {
     treeItems: Record<string, HeadlessTreeItem>;
     selectedNote: Note | null;
     getTreeItemByNoteId: (noteId: number) => NoteTreeItem | null;
+    findNoteById: (noteId: number) => Note | null;
     handleSelectNote: (note: Note | null) => void;
     handleNoteTreeItemMove: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number) => Promise<void> | void;
 };
@@ -118,6 +119,13 @@ function CampaignProvider({
         [treeItems],
     );
 
+    const findNoteById = useCallback(
+        (noteId: number) => {
+            return getTreeItemByNoteId(noteId)?.data || null;
+        },
+        [getTreeItemByNoteId],
+    );
+
     const handleSelectNote = useCallback(
         (note: Note | null) => {
             if (note === selectedNote) {
@@ -148,6 +156,7 @@ function CampaignProvider({
                 treeColumns,
                 treeItems,
                 selectedNote,
+                findNoteById,
                 getTreeItemByNoteId,
                 handleSelectNote,
                 handleNoteTreeItemMove,

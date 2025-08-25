@@ -38,6 +38,7 @@ class Note extends Model
 {
     protected $fillable = [
         'name',
+        'content',
         'campaign_id',
         'note_category_id',
         'note_id',

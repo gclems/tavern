@@ -9,7 +9,7 @@ import InputError from '@/components/input-error';
 import { Privacy } from '@/types/enums/privacy';
 import { Note } from '@/types/models/note';
 
-import { NoteMarkdown } from './note-markdown';
+import { DndMarkdown } from '../../../components/dnd-markdown/dnd-markdown';
 
 type Form = {
     name: string;
@@ -49,7 +49,7 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                         'fixed top-0 right-0 bottom-0 left-1/2',
                     )}
                 >
-                    <div>
+                    <div className="flex flex-col overflow-hidden">
                         <div className="flex items-center justify-between px-4 py-2">
                             <div className="text-dnd-primary text-2xl font-bold">{data.name}</div>
                             <div className="flex">
@@ -62,8 +62,8 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                             </div>
                         </div>
                         <div className="border-dnd-primary border-b-4" />
-                        <div className="p-4">
-                            <NoteMarkdown markdown={data.content} />
+                        <div className="flex flex-col overflow-y-auto p-4">
+                            <DndMarkdown markdown={data.content} />
                         </div>
                     </div>
                 </div>

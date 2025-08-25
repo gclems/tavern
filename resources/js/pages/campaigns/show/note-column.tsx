@@ -35,7 +35,7 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
         state: { selectedItems: selectedNoteItemId ? [selectedNoteItemId] : [], expandedItems, focusedItem: selectedNoteItemId },
         setExpandedItems,
         getItemName: (item) => item.getItemData().name,
-        isItemFolder: (item) => item.getItemData().children?.length > 0,
+        isItemFolder: () => true,
         dataLoader: {
             getItem: (itemId) => treeItems[itemId],
             getChildren: (itemId) => treeItems[itemId].children,

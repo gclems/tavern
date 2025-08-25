@@ -5,7 +5,7 @@ import { Button, cn } from 'shanty-ui';
 
 import { useCampaign } from './campaign-provider';
 import { NoteEditor } from './note-editor';
-import { NoteMarkdown } from './note-markdown';
+import { DndMarkdown } from '../../../components/dnd-markdown/dnd-markdown';
 
 function NoteViewer() {
     const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
@@ -27,7 +27,7 @@ function NoteViewer() {
                 })}
             >
                 {selectedNote && (
-                    <div>
+                    <div className="flex flex-col overflow-hidden">
                         <div className="flex items-center justify-between px-4 py-2">
                             <div className="text-dnd-primary text-2xl font-bold">{selectedNote.name}</div>
                             <div className="flex">
@@ -40,8 +40,8 @@ function NoteViewer() {
                             </div>
                         </div>
                         <div className="border-dnd-primary border-b-4" />
-                        <div className="p-4">
-                            <NoteMarkdown markdown={selectedNote.content} />
+                        <div className="flex flex-col overflow-y-auto p-4">
+                            <DndMarkdown markdown={selectedNote.content} />
                         </div>
                     </div>
                 )}

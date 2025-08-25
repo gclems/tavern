@@ -13,9 +13,11 @@ function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
 
     const note: Note = item.getItemData().data as Note;
 
+    const hasChildren = item.getItemData().children?.length > 0;
+
     return (
-        <div className="flex min-w-full justify-start">
-            {Array.from({ length: item.getItemMeta().level + 1 }).map((_, i) => (
+        <div className="flex min-w-full justify-start text-xs">
+            {Array.from({ length: item.getItemMeta().level }).map((_, i) => (
                 <div key={i} className="border-border w-3 shrink-0 grow-0 border-r border-dotted" />
             ))}
             <div
@@ -25,7 +27,7 @@ function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
                 })}
             >
                 <Button
-                    disabled={!item.isFolder()}
+                    disabled={!hasChildren}
                     onClick={(e) => {
                         e.stopPropagation();
                         if (item.isExpanded()) {
@@ -36,7 +38,7 @@ function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
                     }}
                     variant="link"
                     className={cn({
-                        'opacity-0': !item.isFolder(),
+                        'opacity-0': !hasChildren,
                     })}
                 >
                     {item.isExpanded() ? <SquareMinusIcon size={10} /> : <SquarePlusIcon size={10} />}
@@ -47,7 +49,7 @@ function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
                     onClick={() => {
                         handleSelectNote(note);
                         // auto expand if it's a collapsed folder
-                        if (item.isFolder() && !item.isExpanded()) {
+                        if (hasChildren && !item.isExpanded()) {
                             item.expand();
                         }
                     }}
