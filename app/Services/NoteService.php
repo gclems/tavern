@@ -61,7 +61,7 @@ class NoteService
             $targetCategoryId = null;
 
             if ($targetCategory === null) {
-                $targetNoteId = $targetNote?->id ?? $note->note_id;
+                $targetNoteId = $targetNote->id ?? $note->note_id;
                 $targetCategoryId = $targetNote->note_category_id;
             } else {
                 $targetCategoryId = $targetCategory->id;

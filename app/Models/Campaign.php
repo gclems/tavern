@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property-read \App\Models\CampaignUser|null $campaign_user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign query()
@@ -27,7 +26,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Campaign whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Campaign extends Model

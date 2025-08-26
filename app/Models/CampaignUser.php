@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot as RelationsPivot;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property Role $role
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser query()
@@ -20,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot as RelationsPivot;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CampaignUser whereUserId($value)
- *
  * @mixin \Eloquent
  */
 class CampaignUser extends RelationsPivot
