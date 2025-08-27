@@ -7,7 +7,7 @@ import { HeadlessTreeItem } from '@/types/headless-tree-item';
 import { Note } from '@/types/models/note';
 import { NoteCategory } from '@/types/models/noteCategory';
 
-function SearchNote({ onSelectNote }: { onSelectNote: (note: Note) => void }) {
+function SearchNote({ onSelectNote, onDoubleClick }: { onSelectNote: (note: Note) => void; onDoubleClick: (note: Note) => void }) {
     const { treeItems, treeColumns } = useCampaign();
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -55,6 +55,7 @@ function SearchNote({ onSelectNote }: { onSelectNote: (note: Note) => void }) {
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Rechercher une note..."
                     className="mb-2"
+                    autoFocus
                 />
             </div>
 
@@ -69,6 +70,7 @@ function SearchNote({ onSelectNote }: { onSelectNote: (note: Note) => void }) {
                                     <button
                                         type="button"
                                         onClick={() => selectIndex(index)}
+                                        onDoubleClick={() => onDoubleClick?.(item.data)}
                                         className={cn('w-full border-2 border-transparent px-2 text-left', {
                                             'border-dnd-primary bg-dnd-background text-dnd-foreground': selectedIndex === index,
                                         })}

@@ -9,15 +9,16 @@ import { SearchNote } from '../search-note/search-note';
 
 function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string) => void }) {
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+    const [open, setOpen] = useState<boolean>(false);
 
-    const submit = () => {
-        if (!selectedNote) return;
-
-        onSelectNote?.(`:note[${''}]{id=${selectedNote.id}}`);
+    const submit = (note: Note | null) => {
+        if (!note) return;
+        onSelectNote?.(`:note[${''}]{id=${note.id}}`);
+        setOpen(false);
     };
 
     return (
-        <SimpleDialog.Root>
+        <SimpleDialog.Root open={open} onOpenChange={setOpen}>
             <SimpleDialog.Trigger>
                 <Button variant="ghost">
                     <NotebookIcon />
@@ -26,7 +27,12 @@ function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string
             <SimpleDialog.Popup>
                 <SimpleDialog.Header title="Référencer une note" />
 
-                <SearchNote onSelectNote={setSelectedNote} />
+                <SearchNote
+                    onSelectNote={setSelectedNote}
+                    onDoubleClick={(note) => {
+                        submit(note);
+                    }}
+                />
 
                 <SimpleDialog.Footer className="">
                     <SimpleDialog.Close>
@@ -34,11 +40,9 @@ function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string
                             <XIcon />
                         </Button>
                     </SimpleDialog.Close>
-                    <SimpleDialog.Close>
-                        <Button variant="ghost" onClick={submit} disabled={!selectedNote}>
-                            <CheckIcon />
-                        </Button>
-                    </SimpleDialog.Close>
+                    <Button variant="ghost" onClick={() => submit(selectedNote)} disabled={!selectedNote}>
+                        <CheckIcon />
+                    </Button>
                 </SimpleDialog.Footer>
             </SimpleDialog.Popup>
         </SimpleDialog.Root>
