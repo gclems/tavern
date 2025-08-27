@@ -21,7 +21,7 @@ type Form = {
 function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
     const toast = useToastManager();
 
-    const { data, setData, patch, processing, errors } = useForm<Form>({
+    const { data, setData, put, processing, errors } = useForm<Form>({
         name: note.name,
         content: note.content || '',
         privacy: note.privacy,
@@ -30,7 +30,7 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route('notes.update', note.id), {
+        put(route('notes.update', note.id), {
             onSuccess: () => {
                 onClose?.();
             },

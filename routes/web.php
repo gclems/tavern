@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::post('campaigns/{campaign}/notes', [NotesController::class, 'store'])
         ->name('campaigns.notes.store');
 
-    Route::patch('notes/{note}', [NotesController::class, 'update'])
+    Route::put('notes/{note}', [NotesController::class, 'update'])
         ->name('notes.update');
 
     Route::post('notes/{note}/move', [NotesController::class, 'move'])
