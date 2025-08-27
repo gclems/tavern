@@ -2,10 +2,11 @@ import { FormEventHandler } from 'react';
 
 import { useForm } from '@inertiajs/react';
 import { CheckIcon, XIcon } from 'lucide-react';
-import { Button, cn, Input, Label, RadioTab, Textarea, useToastManager } from 'shanty-ui';
+import { Button, cn, Input, Label, RadioTab, useToastManager } from 'shanty-ui';
 
 import FormField from '@/components/form-field';
 import InputError from '@/components/input-error';
+import { MarkdownEditor } from '@/components/markdown-editor/markdown-editor';
 import { Privacy } from '@/types/enums/privacy';
 import { Note } from '@/types/models/note';
 
@@ -106,7 +107,7 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                         </FormField>
 
                         <FormField className="flex grow flex-col">
-                            <Textarea
+                            <MarkdownEditor
                                 id="content"
                                 name="content"
                                 required

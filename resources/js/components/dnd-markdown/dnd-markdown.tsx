@@ -35,7 +35,7 @@ function customDirectives() {
     };
 }
 
-function DndMarkdown({ markdown }: { markdown: string }) {
+function DndMarkdown({ markdown, allowTooltips = true }: { markdown: string; allowTooltips?: boolean }) {
     return (
         <div className="dnd_markdown">
             <Markdown
@@ -51,7 +51,11 @@ function DndMarkdown({ markdown }: { markdown: string }) {
                     ul: Ul,
                     blockquote: Blockquote,
                     // custom tags
-                    note: ({ node, children }) => <NoteLink noteId={node.properties?.id}>{children}</NoteLink>,
+                    note: ({ node, children }) => (
+                        <NoteLink noteId={node.properties?.id} allowTooltips={allowTooltips}>
+                            {children}
+                        </NoteLink>
+                    ),
                 }}
             >
                 {markdown}

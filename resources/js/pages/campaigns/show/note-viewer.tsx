@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { MaximizeIcon, MinimizeIcon, PenIcon } from 'lucide-react';
 import { Button, cn } from 'shanty-ui';
 
+import { DndMarkdown } from '../../../components/dnd-markdown/dnd-markdown';
+
 import { useCampaign } from './campaign-provider';
 import { NoteEditor } from './note-editor';
-import { DndMarkdown } from '../../../components/dnd-markdown/dnd-markdown';
 
 function NoteViewer() {
     const [fullScreenMode, setFullScreenMode] = useState<boolean>(false);
