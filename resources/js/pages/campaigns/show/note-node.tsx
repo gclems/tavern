@@ -48,9 +48,15 @@ function NoteNode({ item }: { item: ItemInstance<HeadlessTreeItem> }) {
                     className="w-full cursor-pointer overflow-hidden text-left text-ellipsis whitespace-nowrap"
                     onClick={() => {
                         handleSelectNote(note);
-                        // auto expand if it's a collapsed folder
-                        if (hasChildren && !item.isExpanded()) {
-                            item.expand();
+
+                        if (hasChildren) {
+                            if (note !== selectedNote) {
+                                // expand if selecting note
+                                item.expand();
+                            } else if (selectedNote === note) {
+                                // expand if unselecting note
+                                item.collapse();
+                            }
                         }
                     }}
                 >
