@@ -13,7 +13,7 @@ function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string
 
     const submit = (note: Note | null) => {
         if (!note) return;
-        onSelectNote?.(`:note[${''}]{id=${note.id}}`);
+        onSelectNote?.(`:note[]{id=${note.id}}`);
         setOpen(false);
     };
 

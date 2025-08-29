@@ -2,6 +2,9 @@ import { ComponentProps, useEffect, useLayoutEffect, useRef, useState } from 're
 
 import { BoldIcon, ItalicIcon, QuoteIcon } from 'lucide-react';
 import { Button, Separator, Textarea } from 'shanty-ui';
+
+import { AddImageButton } from './add-image-button';
+import { AddLinkButton } from './add-link-button';
 import { AddNoteReferenceButton } from './add-note-reference-button';
 
 type TextMutation = {
@@ -116,6 +119,7 @@ function MarkdownEditor({ value, defaultValue, onChange, ...textareaProps }: Com
                 break;
             case 'replace':
                 func = replaceSelection;
+                break;
             case 'before':
             default:
                 func = addTextBefore;
@@ -161,6 +165,8 @@ function MarkdownEditor({ value, defaultValue, onChange, ...textareaProps }: Com
                     <QuoteIcon />
                 </Button>
                 <Separator orientation="vertical" className="bg-dnd-primary/20 mx-2 h-[80%] w-px" />
+                <AddLinkButton onSubmit={(text) => decorateSelection(text, 'replace')} />
+                <AddImageButton onSubmit={(text) => decorateSelection(text, 'replace')} />
                 <AddNoteReferenceButton onSelectNote={(text) => decorateSelection(text, 'replace')} />
             </div>
             <Textarea ref={textarea} {...textareaProps} value={markdown as string} onChange={handleTextareaChange} />

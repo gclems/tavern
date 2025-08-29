@@ -44,6 +44,8 @@ function CampaignProvider({
 
     children: React.ReactNode;
 }) {
+    const [initialized, setInitialized] = useState<boolean>(false);
+
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
     const treeColumns: NoteCategoryTreeItem[] = useMemo(() => {
@@ -105,12 +107,23 @@ function CampaignProvider({
     }, [treeColumns, notes]);
 
     useEffect(() => {
+        setInitialized(true);
+    }, []);
+
+    useEffect(() => {
         // update the selectedNote if the items have changed
         if (selectedNote) {
             const updatedNote = treeItems[getNoteTreeItemId(selectedNote.id)]?.data;
             setSelectedNote(updatedNote);
         }
     }, [selectedNote, treeItems]);
+
+    useEffect(() => {
+        if (!initialized) return;
+        const max = notes.reduce((prev, current) => (prev && prev.id > current.id ? prev : current));
+        setSelectedNote(max);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [notes]);
 
     const getTreeItemByNoteId = useCallback(
         (noteId: number) => {
