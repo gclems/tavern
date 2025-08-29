@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { CheckIcon, NotebookIcon, XIcon } from 'lucide-react';
-import { Button, SimpleDialog } from 'shanty-ui';
+import { Button, SimpleDialog, SimpleTooltip } from 'shanty-ui';
 
 import { Note } from '@/types/models/note';
 
@@ -19,11 +19,13 @@ function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string
 
     return (
         <SimpleDialog.Root open={open} onOpenChange={setOpen}>
-            <SimpleDialog.Trigger>
-                <Button variant="ghost">
-                    <NotebookIcon />
-                </Button>
-            </SimpleDialog.Trigger>
+            <SimpleTooltip content="Ajouter un lien vers une note">
+                <SimpleDialog.Trigger>
+                    <Button variant="ghost">
+                        <NotebookIcon />
+                    </Button>
+                </SimpleDialog.Trigger>
+            </SimpleTooltip>
             <SimpleDialog.Popup>
                 <SimpleDialog.Header title="Référencer une note" />
 

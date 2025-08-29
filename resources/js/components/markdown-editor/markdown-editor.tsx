@@ -1,7 +1,7 @@
 import { ComponentProps, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { BoldIcon, ItalicIcon, QuoteIcon } from 'lucide-react';
-import { Button, Separator, Textarea } from 'shanty-ui';
+import { Button, Separator, SimpleTooltip, Textarea } from 'shanty-ui';
 
 import { AddImageButton } from './add-image-button';
 import { AddLinkButton } from './add-link-button';
@@ -153,20 +153,27 @@ function MarkdownEditor({ value, defaultValue, onChange, ...textareaProps }: Com
     return (
         <>
             <div className="bg-input-background border-input-border flex items-center gap-1 rounded-sm border">
-                <Button variant="ghost" onClick={() => decorateSelection('**', 'around')}>
-                    <BoldIcon />
-                </Button>
+                <SimpleTooltip content="Gras">
+                    <Button variant="ghost" onClick={() => decorateSelection('**', 'around')}>
+                        <BoldIcon />
+                    </Button>
+                </SimpleTooltip>
 
-                <Button variant="ghost" onClick={() => decorateSelection('_', 'around')}>
-                    <ItalicIcon />
-                </Button>
+                <SimpleTooltip content="Italique">
+                    <Button variant="ghost" onClick={() => decorateSelection('_', 'around')}>
+                        <ItalicIcon />
+                    </Button>
+                </SimpleTooltip>
                 <Separator orientation="vertical" className="bg-dnd-primary/20 mx-2 h-[80%] w-px" />
-                <Button variant="ghost" onClick={() => decorateSelection('> ', 'line-start')}>
-                    <QuoteIcon />
-                </Button>
+                <SimpleTooltip content="Citation">
+                    <Button variant="ghost" onClick={() => decorateSelection('> ', 'line-start')}>
+                        <QuoteIcon />
+                    </Button>
+                </SimpleTooltip>
                 <Separator orientation="vertical" className="bg-dnd-primary/20 mx-2 h-[80%] w-px" />
                 <AddLinkButton onSubmit={(text) => decorateSelection(text, 'replace')} />
                 <AddImageButton onSubmit={(text) => decorateSelection(text, 'replace')} />
+                <Separator orientation="vertical" className="bg-dnd-primary/20 mx-2 h-[80%] w-px" />
                 <AddNoteReferenceButton onSelectNote={(text) => decorateSelection(text, 'replace')} />
             </div>
             <Textarea ref={textarea} {...textareaProps} value={markdown as string} onChange={handleTextareaChange} />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { CheckIcon, ImageIcon, XIcon } from 'lucide-react';
-import { Button, Input, Label, SimpleDialog } from 'shanty-ui';
+import { Button, Input, Label, SimpleDialog, SimpleTooltip } from 'shanty-ui';
 
 import FormField from '../form-field';
 
@@ -23,11 +23,13 @@ function AddImageButton({ onSubmit }: { onSubmit?: (text: string) => void }) {
 
     return (
         <SimpleDialog.Root open={open} onOpenChange={setOpen}>
-            <SimpleDialog.Trigger>
-                <Button variant="ghost">
-                    <ImageIcon />
-                </Button>
-            </SimpleDialog.Trigger>
+            <SimpleTooltip content="Ajouter une image">
+                <SimpleDialog.Trigger>
+                    <Button variant="ghost">
+                        <ImageIcon />
+                    </Button>
+                </SimpleDialog.Trigger>
+            </SimpleTooltip>
             <SimpleDialog.Popup>
                 <SimpleDialog.Header title="Insérer un lien" />
 

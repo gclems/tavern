@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { CheckIcon, LinkIcon, XIcon } from 'lucide-react';
-import { Button, Input, Label, SimpleDialog } from 'shanty-ui';
+import { Button, Input, Label, SimpleDialog, SimpleTooltip } from 'shanty-ui';
 
 import FormField from '../form-field';
 
@@ -25,11 +25,13 @@ function AddLinkButton({ onSubmit }: { onSubmit?: (text: string) => void }) {
 
     return (
         <SimpleDialog.Root open={open} onOpenChange={setOpen}>
-            <SimpleDialog.Trigger>
-                <Button variant="ghost">
-                    <LinkIcon />
-                </Button>
-            </SimpleDialog.Trigger>
+            <SimpleTooltip content="Ajouter un lien">
+                <SimpleDialog.Trigger>
+                    <Button variant="ghost">
+                        <LinkIcon />
+                    </Button>
+                </SimpleDialog.Trigger>
+            </SimpleTooltip>
             <SimpleDialog.Popup>
                 <SimpleDialog.Header title="Insérer un lien" />
 
