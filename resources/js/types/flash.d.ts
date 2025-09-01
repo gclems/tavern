@@ -9,6 +9,7 @@ export interface FlashMessage {
 
 export interface Flash {
     message: FlashMessage;
+    created_note_id?: string;
 }
 
 export interface FlashMessageTranslation {

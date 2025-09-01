@@ -54,9 +54,6 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                         <div className="flex items-center justify-between px-4 py-2">
                             <div className="text-dnd-primary text-2xl font-bold">{data.name}</div>
                             <div className="flex">
-                                <Button variant="ghost" type="submit">
-                                    <CheckIcon />
-                                </Button>
                                 <Button variant="ghost" onClick={onClose}>
                                     <XIcon />
                                 </Button>
@@ -122,6 +119,17 @@ function NoteEditor({ note, onClose }: { note: Note; onClose: () => void }) {
                             />
                             <InputError message={errors.content} />
                         </FormField>
+
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <Button variant="ghost" type="submit">
+                                    <CheckIcon />
+                                </Button>
+                                <Button variant="ghost" onClick={onClose}>
+                                    <XIcon />
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

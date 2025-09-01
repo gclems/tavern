@@ -1,5 +1,8 @@
 import { useContext, createContext, useMemo, useState, useCallback, useEffect } from 'react';
 
+import { usePage } from '@inertiajs/react';
+
+import { Flash } from '@/types/flash';
 import { HeadlessTreeItem } from '@/types/headless-tree-item';
 import { Campaign } from '@/types/models/campaign';
 import { Note } from '@/types/models/note';
@@ -11,11 +14,15 @@ type CampaignContextType = {
     campaign: Campaign;
     treeColumns: NoteCategoryTreeItem[];
     treeItems: Record<string, HeadlessTreeItem>;
+    selectedTreeItemId: string | null;
     selectedNote: Note | null;
     getTreeItemByNoteId: (noteId: number) => NoteTreeItem | null;
     findNoteById: (noteId: number) => Note | null;
-    handleSelectNote: (note: Note | null) => void;
-    handleNoteTreeItemMove: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number) => Promise<void> | void;
+    selectTreeItemByNoteId: (noteId: number) => void;
+    selectTreeItem: (item: NoteTreeItem) => void;
+    unSelectTreeItem: () => void;
+    moveNoteTreeItem: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number) => Promise<void> | void;
+    deleteNote: (note: Note) => void;
 };
 
 type MoveNoteType = {
@@ -36,17 +43,20 @@ function CampaignProvider({
     notes,
     children,
     onNoteMove,
+    onDeleteNote,
 }: {
     campaign: Campaign;
     noteCategories: NoteCategory[];
     notes: Note[];
+    createdNoteId?: number | undefined;
     onNoteMove?: (args: MoveNoteType) => Promise<boolean> | boolean;
+    onDeleteNote?: (note: Note) => Promise<boolean> | boolean;
 
     children: React.ReactNode;
 }) {
-    const [initialized, setInitialized] = useState<boolean>(false);
+    const [selectedTreeItemId, setSelectedTreeItemId] = useState<string | null>(null);
 
-    const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+    const { created_note_id } = usePage().props.flash as Flash;
 
     const treeColumns: NoteCategoryTreeItem[] = useMemo(() => {
         const columns: NoteCategoryTreeItem[] = [];
@@ -106,24 +116,25 @@ function CampaignProvider({
         return allItems;
     }, [treeColumns, notes]);
 
-    useEffect(() => {
-        setInitialized(true);
-    }, []);
+    const selectedNote = useMemo<Note | null>(() => {
+        if (!selectedTreeItemId) return null;
+        return treeItems[selectedTreeItemId]?.data || null;
+    }, [selectedTreeItemId, treeItems]);
 
     useEffect(() => {
         // update the selectedNote if the items have changed
         if (selectedNote) {
-            const updatedNote = treeItems[getNoteTreeItemId(selectedNote.id)]?.data;
-            setSelectedNote(updatedNote);
+            const itemId = getNoteTreeItemId(selectedNote.id);
+            if (treeItems[getNoteTreeItemId(selectedNote.id)]) {
+                setSelectedTreeItemId(itemId);
+            }
         }
     }, [selectedNote, treeItems]);
 
     useEffect(() => {
-        if (!initialized) return;
-        const max = notes.reduce((prev, current) => (prev && prev.id > current.id ? prev : current));
-        setSelectedNote(max);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [notes]);
+        if (!created_note_id) return;
+        setSelectedTreeItemId(getNoteTreeItemId(+created_note_id));
+    }, [created_note_id]);
 
     const getTreeItemByNoteId = useCallback(
         (noteId: number) => {
@@ -139,18 +150,22 @@ function CampaignProvider({
         [getTreeItemByNoteId],
     );
 
-    const handleSelectNote = useCallback(
-        (note: Note | null) => {
-            if (note === selectedNote) {
-                setSelectedNote(null);
-            } else {
-                setSelectedNote(note ?? null);
-            }
-        },
-        [selectedNote],
-    );
+    const selectTreeItem = useCallback((item: NoteTreeItem) => {
+        setSelectedTreeItemId(item.id);
+    }, []);
 
-    const handleNoteTreeItemMove = useCallback(
+    const selectTreeItemByNoteId = useCallback((noteId: number) => {
+        const id = getNoteTreeItemId(noteId);
+        if (id) {
+            setSelectedTreeItemId(id);
+        }
+    }, []);
+
+    const unSelectTreeItem = useCallback(() => {
+        setSelectedTreeItemId(null);
+    }, []);
+
+    const moveNoteTreeItem = useCallback(
         async (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number = 0) => {
             const note = movedItem.data;
 
@@ -162,6 +177,19 @@ function CampaignProvider({
         [onNoteMove, treeColumns, treeItems],
     );
 
+    const deleteNote = useCallback(
+        (note: Note) => {
+            if (!note) return;
+
+            if (selectedNote === note) {
+                setSelectedTreeItemId(null);
+            }
+
+            onDeleteNote?.(note);
+        },
+        [onDeleteNote, selectedNote],
+    );
+
     return (
         <CampaignContext
             value={{
@@ -169,10 +197,14 @@ function CampaignProvider({
                 treeColumns,
                 treeItems,
                 selectedNote,
+                selectedTreeItemId,
                 findNoteById,
                 getTreeItemByNoteId,
-                handleSelectNote,
-                handleNoteTreeItemMove,
+                selectTreeItem,
+                selectTreeItemByNoteId,
+                unSelectTreeItem,
+                moveNoteTreeItem,
+                deleteNote,
             }}
         >
             {children}

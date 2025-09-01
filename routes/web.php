@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::put('notes/{note}', [NotesController::class, 'update'])
         ->name('notes.update');
 
+    Route::delete('notes/{note}', [NotesController::class, 'destroy'])
+        ->name('notes.destroy');
+
     Route::post('notes/{note}/move', [NotesController::class, 'move'])
         ->name('notes.move');
 });

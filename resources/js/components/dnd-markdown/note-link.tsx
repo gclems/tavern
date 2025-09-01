@@ -5,12 +5,16 @@ import { useCampaign } from '@/pages/campaigns/show/campaign-provider';
 import { DndMarkdown } from './dnd-markdown';
 
 function NoteLink({ noteId, children, allowTooltips = true }: { noteId: number; children: React.ReactNode; allowTooltips?: boolean }) {
-    const { findNoteById, handleSelectNote } = useCampaign();
+    const { findNoteById, selectTreeItemByNoteId } = useCampaign();
 
     const note = findNoteById(noteId);
 
     const button = (
-        <button type="button" className="text-dnd-primary cursor-pointer hover:underline" onClick={note ? () => handleSelectNote(note) : undefined}>
+        <button
+            type="button"
+            className="text-dnd-primary cursor-pointer hover:underline"
+            onClick={note ? () => selectTreeItemByNoteId(noteId) : undefined}
+        >
             {children ?? note?.name}
         </button>
     );

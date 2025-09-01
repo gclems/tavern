@@ -26,9 +26,20 @@ const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes })
         return true;
     };
 
+    const handleNoteDelete = (note: Note) => {
+        router.delete(route('notes.destroy', { note: note.id }));
+        return true;
+    };
+
     return (
         <PrivateLayout title={campaign.name} menuKey="campaigns">
-            <CampaignProvider campaign={campaign} noteCategories={noteCategories} notes={notes} onNoteMove={handleNoteMove}>
+            <CampaignProvider
+                campaign={campaign}
+                noteCategories={noteCategories}
+                notes={notes}
+                onNoteMove={handleNoteMove}
+                onDeleteNote={handleNoteDelete}
+            >
                 <div className="flex max-h-full min-h-full w-full overflow-hidden">
                     <NoteColumns />
                     <NoteViewer />

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DestroyNoteAndDescendantsAction;
 use App\Actions\StoreNoteAction;
 use App\Actions\UpdateNoteAction;
 use App\Enums\Privacy;
 use App\Http\Requests\CreateNoteRequest;
+use App\Http\Requests\DeleteNoteRequest;
 use App\Http\Requests\MoveNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use App\Models\Campaign;
@@ -19,7 +21,8 @@ class NotesController extends Controller
 {
     public function __construct(
         protected NoteService $noteService,
-        protected UpdateNoteAction $updateNoteAction
+        protected UpdateNoteAction $updateNoteAction,
+        protected DestroyNoteAndDescendantsAction $destroyNoteAndDescendantsAction
     ) {}
 
     /**
@@ -27,7 +30,7 @@ class NotesController extends Controller
      */
     public function store(Campaign $campaign, CreateNoteRequest $request, StoreNoteAction $storeNoteAction): RedirectResponse
     {
-        $storeNoteAction->execute(
+        $created = $storeNoteAction->execute(
             $request->string('name'),
             $campaign->id,
             $request->integer('note_category_id'),
@@ -35,7 +38,7 @@ class NotesController extends Controller
             Privacy::from($request->string('privacy'))
         );
 
-        return Redirect::back();
+        return Redirect::back()->with('created_note_id', $created->id);
     }
 
     /**
@@ -68,8 +71,10 @@ class NotesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Note $note, DeleteNoteRequest $request): RedirectResponse
     {
-        //
+        $this->destroyNoteAndDescendantsAction->execute($note);
+
+        return Redirect::back();
     }
 }
