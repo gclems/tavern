@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ChangeNoteParentAction;
 use App\Actions\DestroyNoteAndDescendantsAction;
 use App\Actions\StoreNoteAction;
 use App\Actions\UpdateNoteAction;
@@ -13,14 +14,13 @@ use App\Http\Requests\UpdateNoteRequest;
 use App\Models\Campaign;
 use App\Models\Note;
 use App\Models\NoteCategory;
-use App\Services\NoteService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
 class NotesController extends Controller
 {
     public function __construct(
-        protected NoteService $noteService,
+        protected ChangeNoteParentAction $changeNoteParentAction,
         protected UpdateNoteAction $updateNoteAction,
         protected DestroyNoteAndDescendantsAction $destroyNoteAndDescendantsAction
     ) {}
@@ -58,11 +58,23 @@ class NotesController extends Controller
 
     public function move(Note $note, MoveNoteRequest $request): RedirectResponse
     {
-        $this->noteService->move(
+        $targetNote = null;
+        $targetCategory = null;
+
+        if ($request->filled('parentNoteId')) {
+            $targetNote = Note::find($request->integer('parentNoteId'));
+        }
+
+        if ($request->filled('parentNoteCategoryId')) {
+            $targetCategory = NoteCategory::find($request->integer('parentNoteCategoryId'));
+        } else {
+            $targetCategory = $targetNote->noteCategory;
+        }
+
+        $this->changeNoteParentAction->execute(
             $note,
-            $request->integer('sort_order'),
-            $request->filled('parentNoteCategoryId') ? NoteCategory::find($request->integer('parentNoteCategoryId')) : null,
-            $request->filled('parentNoteId') ? Note::find($request->integer('parentNoteId')) : null
+            $targetCategory,
+            $targetNote
         );
 
         return Redirect::back();

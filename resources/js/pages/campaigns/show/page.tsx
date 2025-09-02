@@ -28,6 +28,15 @@ const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes })
 
     const handleNoteDelete = (note: Note) => {
         router.delete(route('notes.destroy', { note: note.id }));
+
+        return true;
+    };
+
+    const handleMoveCategory = (category: NoteCategory, order: number) => {
+        router.put(route('noteCategories.move', { noteCategory: category.id }), {
+            sortOrder: order,
+        });
+
         return true;
     };
 
@@ -39,8 +48,9 @@ const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes })
                 notes={notes}
                 onNoteMove={handleNoteMove}
                 onDeleteNote={handleNoteDelete}
+                onMoveCategory={handleMoveCategory}
             >
-                <div className="flex max-h-full min-h-full w-full overflow-hidden">
+                <div className="flex w-full flex-1 overflow-auto">
                     <NoteColumns />
                     <NoteViewer />
                 </div>

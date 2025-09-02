@@ -25,7 +25,6 @@ class MoveNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sort_order' => 'required|integer|min:0',
             'parentNoteCategoryId' => [
                 'nullable',
                 'integer',

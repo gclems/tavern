@@ -14,7 +14,7 @@ const PrivateLayout: React.FC<React.PropsWithChildren<PrivateLayoutProps>> = ({ 
             <main className="flex h-screen w-full flex-col">
                 <Titlebar title={title} />
                 {description && <div className="text-muted-foreground my-4 px-4">{description}</div>}
-                <div className="flex grow flex-col overflow-y-auto">{children}</div>
+                <div className="flex flex-1 flex-col overflow-y-auto">{children}</div>
             </main>
         </BaseLayout>
     );

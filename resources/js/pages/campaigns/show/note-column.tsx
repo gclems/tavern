@@ -10,7 +10,8 @@ import {
     syncDataLoaderFeature,
 } from '@headless-tree/core';
 import { useTree } from '@headless-tree/react';
-import { Button, cn, ScrollArea, SimpleDialog } from 'shanty-ui';
+import { ArrowLeftIcon, ArrowRightIcon, TrashIcon } from 'lucide-react';
+import { Button, cn, ScrollArea, SimpleDialog, SimpleMenu } from 'shanty-ui';
 
 import { HeadlessTreeItem } from '@/types/headless-tree-item';
 import { NoteCategoryTreeItem } from '@/types/note-category-tree-item';
@@ -23,7 +24,7 @@ import { NoteNode } from './note-node';
 function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeItem }) {
     const [expandedItems, setExpandedItems] = useState<HeadlessTreeItem[]>([]);
 
-    const { campaign, treeColumns, treeItems, selectedTreeItemId, moveNoteTreeItem, deleteNote } = useCampaign();
+    const { campaign, treeColumns, treeItems, selectedTreeItemId, moveNoteTreeItem, deleteNote, moveCategory } = useCampaign();
 
     const [noteTreeItemToDelete, setNoteTreeItemToDelete] = useState<ItemInstance<NoteTreeItem> | null>(null);
 
@@ -35,6 +36,7 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
         rootItemId: categoryTreeItem.id,
         state: { selectedItems: selectedTreeItemId ? [selectedTreeItemId] : [], focusedItem: selectedTreeItemId, expandedItems },
         setExpandedItems,
+        // canReorder: false,
         getItemName: (item) => {
             return item?.getItemData()?.name ?? 'deleted';
         },
@@ -56,7 +58,7 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
             const movedItem = items[0]?.getItemData() as NoteTreeItem;
             const targetItem = target?.item.getItemData() as HeadlessTreeItem;
 
-            moveNoteTreeItem(movedItem, targetItem, target.childIndex);
+            moveNoteTreeItem(movedItem, targetItem);
 
             if (!expandedItems.includes(targetItem.id)) {
                 setExpandedItems((prev) => [...prev, targetItem.id]);
@@ -72,7 +74,7 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
             const droppedId = dataTransfer.getData('text/plain');
             const movedItem = treeItems[droppedId];
             const targetItem = target?.item.getItemData() as HeadlessTreeItem;
-            moveNoteTreeItem(movedItem, targetItem, target.childIndex);
+            moveNoteTreeItem(movedItem, targetItem);
             if (!expandedItems.includes(targetItem.id)) {
                 setExpandedItems((prev) => [...prev, targetItem.id]);
             }
@@ -100,17 +102,45 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
     return (
         <>
             <div
-                className={cn('flex h-full min-w-[150px] flex-col', {
+                className={cn('flex min-w-[150px] flex-1 flex-col', {
                     'border-l': category.sort_order > 0,
                 })}
                 style={{ width: `${50 / treeColumns.length}%`, flexGrow: 1 }}
             >
-                <div className="flex items-center justify-between border-b px-1">
-                    {category.name}
-                    <CreateNoteButton campaignId={campaign.id} noteCategoryId={category.id} />
+                <div className="group/category flex items-center justify-between border-b px-1">
+                    <div className="flex-1 overflow-hidden text-left text-sm text-ellipsis whitespace-nowrap">{category.name}</div>
+                    <SimpleMenu.Root>
+                        <SimpleMenu.Trigger render={<Button variant="link">...</Button>} />
+                        <SimpleMenu.Popup>
+                            <div className="mb-1 text-center">{category.name}</div>
+                            <div className="flex items-center gap-x-1">
+                                <SimpleMenu.Item
+                                    onClick={() => {
+                                        moveCategory(category, category.sort_order - 1);
+                                    }}
+                                    disabled={category.sort_order === 0}
+                                >
+                                    <ArrowLeftIcon />
+                                </SimpleMenu.Item>
+                                <SimpleMenu.Item render={<CreateNoteButton campaignId={campaign.id} noteCategoryId={category.id} />} />
+                                <SimpleMenu.Item
+                                    onClick={() => {
+                                        moveCategory(category, category.sort_order + 1);
+                                    }}
+                                    disabled={category.sort_order >= treeColumns.length - 1}
+                                >
+                                    <ArrowRightIcon />
+                                </SimpleMenu.Item>
+                            </div>
+
+                            <SimpleMenu.Item>
+                                <TrashIcon />
+                            </SimpleMenu.Item>
+                        </SimpleMenu.Popup>
+                    </SimpleMenu.Root>
                 </div>
 
-                <ScrollArea.Root className="max-h-full min-h-full">
+                <ScrollArea.Root className="flex-1 overflow-hidden">
                     <ScrollArea.Viewport className="max-h-full min-h-full overscroll-contain">
                         <div {...tree.getContainerProps()} className="flex flex-col">
                             {tree.getItems().map((item) => (
@@ -120,11 +150,22 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
                             ))}
                             <div style={tree.getDragLineStyle()} className="bg-dnd-primary h-1" />
                         </div>
+                        <div className="my-1 px-1">
+                            <CreateNoteButton
+                                campaignId={campaign.id}
+                                noteCategoryId={category.id}
+                                className={cn(
+                                    'hover:bg-dnd-primary/10 flex justify-center text-center opacity-50 hover:opacity-100',
+                                    'border-dnd-primary/50 w-full rounded-sm border',
+                                )}
+                            />
+                        </div>
                     </ScrollArea.Viewport>
                     <ScrollArea.Scrollbar className="bg-scrollbar-background flex w-1 justify-center rounded opacity-0 transition-opacity delay-300 data-[hovering]:opacity-100 data-[hovering]:delay-0 data-[hovering]:duration-75 data-[scrolling]:opacity-100 data-[scrolling]:delay-0 data-[scrolling]:duration-75">
                         <ScrollArea.Thumb className="bg-scrollbar-thumb w-full rounded" />
                     </ScrollArea.Scrollbar>
                 </ScrollArea.Root>
+
                 <div
                     id={dragPreviewId}
                     className="bg-dnd-background text-dnd-foreground border-dnd-primary absolute -left-full w-auto border-2 p-1 shadow-md"

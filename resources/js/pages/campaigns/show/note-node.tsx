@@ -29,7 +29,7 @@ function NoteNode({ item, onDelete }: { item: ItemInstance<HeadlessTreeItem>; on
                     render={
                         <div
                             className={cn(
-                                'hover:bg-dnd-primary/10 flex w-full items-center gap-x-1 overflow-hidden border-2 border-l-4 border-transparent',
+                                'group/note hover:bg-dnd-primary/10 flex w-full items-center gap-x-1 overflow-hidden border-2 border-l-4 border-transparent',
                                 {
                                     'bg-dnd-background border-dnd-primary text-dnd-primary': selectedNote === note,
                                     'bg-dnd-primary/20': item.isDragTarget(),
@@ -78,7 +78,9 @@ function NoteNode({ item, onDelete }: { item: ItemInstance<HeadlessTreeItem>; on
                             >
                                 {note.name}
                             </button>
-                            <CreateNoteButton campaignId={campaign.id} noteCategoryId={note.note_category_id} noteId={note.id} />
+                            <div className="opacity-10 group-hover/note:opacity-100">
+                                <CreateNoteButton campaignId={campaign.id} noteCategoryId={note.note_category_id} noteId={note.id} />
+                            </div>
                         </div>
                     }
                 />

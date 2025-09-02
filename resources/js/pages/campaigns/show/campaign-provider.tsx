@@ -21,13 +21,13 @@ type CampaignContextType = {
     selectTreeItemByNoteId: (noteId: number) => void;
     selectTreeItem: (item: NoteTreeItem) => void;
     unSelectTreeItem: () => void;
-    moveNoteTreeItem: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number) => Promise<void> | void;
+    moveNoteTreeItem: (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem) => Promise<void> | void;
     deleteNote: (note: Note) => void;
+    moveCategory: (category: NoteCategory, order: number) => void;
 };
 
 type MoveNoteType = {
     note: Note;
-    sort_order: number;
     parentNoteCategory?: NoteCategory;
     parentNote?: Note;
 };
@@ -44,6 +44,7 @@ function CampaignProvider({
     children,
     onNoteMove,
     onDeleteNote,
+    onMoveCategory,
 }: {
     campaign: Campaign;
     noteCategories: NoteCategory[];
@@ -51,7 +52,7 @@ function CampaignProvider({
     createdNoteId?: number | undefined;
     onNoteMove?: (args: MoveNoteType) => Promise<boolean> | boolean;
     onDeleteNote?: (note: Note) => Promise<boolean> | boolean;
-
+    onMoveCategory: (category: NoteCategory, order: number) => void;
     children: React.ReactNode;
 }) {
     const [selectedTreeItemId, setSelectedTreeItemId] = useState<string | null>(null);
@@ -89,7 +90,7 @@ function CampaignProvider({
         // create a map of note.id → NoteTreeItem
         const noteMap: Record<string, NoteTreeItem> = {};
         notes
-            .sort((a, b) => a.sort_order - b.sort_order)
+            .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase(), undefined, { sensitivity: 'base' }))
             .forEach((note) => {
                 const treeItemId = getNoteTreeItemId(note.id);
                 const treeItem: NoteTreeItem = {
@@ -166,13 +167,13 @@ function CampaignProvider({
     }, []);
 
     const moveNoteTreeItem = useCallback(
-        async (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem, index: number = 0) => {
+        async (movedItem: NoteTreeItem, targetTreeItem: HeadlessTreeItem) => {
             const note = movedItem.data;
 
             const targetNoteCategory = treeColumns.find((column) => column.id === targetTreeItem.id)?.data;
             const targetNote = (!targetNoteCategory && treeItems[targetTreeItem.id]?.data) ?? undefined;
 
-            onNoteMove?.({ note, parentNoteCategory: targetNoteCategory, parentNote: targetNote, sort_order: index });
+            onNoteMove?.({ note, parentNoteCategory: targetNoteCategory, parentNote: targetNote });
         },
         [onNoteMove, treeColumns, treeItems],
     );
@@ -190,6 +191,13 @@ function CampaignProvider({
         [onDeleteNote, selectedNote],
     );
 
+    const moveCategory = useCallback(
+        (category: NoteCategory, order: number) => {
+            onMoveCategory?.(category, order);
+        },
+        [onMoveCategory],
+    );
+
     return (
         <CampaignContext
             value={{
@@ -205,6 +213,7 @@ function CampaignProvider({
                 unSelectTreeItem,
                 moveNoteTreeItem,
                 deleteNote,
+                moveCategory,
             }}
         >
             {children}

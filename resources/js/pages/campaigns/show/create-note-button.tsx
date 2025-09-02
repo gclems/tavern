@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Form } from '@inertiajs/react';
 import { PlusIcon } from 'lucide-react';
-import { Button, Input, Label, RadioTab, SimpleSheet, useToastManager } from 'shanty-ui';
+import { Button, Input, Label, RadioTab, SimpleSheet, SimpleTooltip, useToastManager } from 'shanty-ui';
 
 import FormField from '@/components/form-field';
 import InputError from '@/components/input-error';
@@ -15,7 +15,17 @@ type Form = {
     privacy: Privacy;
 };
 
-function CreateNoteButton({ campaignId, noteCategoryId, noteId }: { campaignId: number; noteCategoryId: number; noteId?: number }) {
+function CreateNoteButton({
+    campaignId,
+    noteCategoryId,
+    noteId,
+    className,
+}: {
+    campaignId: number;
+    noteCategoryId: number;
+    noteId?: number;
+    className?: string;
+}) {
     const [opened, setOpened] = useState(false);
     const toast = useToastManager();
 
@@ -26,11 +36,13 @@ function CreateNoteButton({ campaignId, noteCategoryId, noteId }: { campaignId: 
                 setOpened(o);
             }}
         >
-            <SimpleSheet.Trigger>
-                <Button variant="link">
-                    <PlusIcon />
-                </Button>
-            </SimpleSheet.Trigger>
+            <SimpleTooltip content="Créer une note">
+                <SimpleSheet.Trigger>
+                    <Button variant="link" className={className}>
+                        <PlusIcon />
+                    </Button>
+                </SimpleSheet.Trigger>
+            </SimpleTooltip>
             <SimpleSheet.Popup>
                 <SimpleSheet.Header title="Créer une note" />
                 <SimpleSheet.Body>
