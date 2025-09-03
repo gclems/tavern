@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \App\Models\NoteCategory $noteCategory
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Note> $notes
  * @property-read int|null $notes_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note query()
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note wherePrivacy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Note whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Note extends Model

@@ -12,9 +12,9 @@ use App\Models\User;
 class CampaignService
 {
     public function __construct(
-        private StoreCampaignAction $storeCampaign,
-        private StoreCampaignUserAction $storeCampaignUser,
-        private StoreNoteCategoriesAction $storeNoteCategoriesAction
+        private readonly StoreCampaignAction $storeCampaign,
+        private readonly StoreCampaignUserAction $storeCampaignUser,
+        private readonly StoreNoteCategoriesAction $storeNoteCategoriesAction
     ) {}
 
     public function create(

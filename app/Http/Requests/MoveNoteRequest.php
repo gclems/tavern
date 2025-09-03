@@ -28,14 +28,14 @@ class MoveNoteRequest extends FormRequest
             'parentNoteCategoryId' => [
                 'nullable',
                 'integer',
-                Rule::exists('App\Models\NoteCategory', 'id')->where(function (Builder $query) {
+                Rule::exists(\App\Models\NoteCategory::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('note')->campaign_id);
                 }),
             ],
             'parentNoteId' => [
                 'nullable',
                 'integer',
-                Rule::exists('App\Models\Note', 'id')->where(function (Builder $query) {
+                Rule::exists(\App\Models\Note::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('note')->campaign_id);
                 }),
             ],

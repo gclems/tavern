@@ -8,10 +8,8 @@ class StoreCampaignAction
 {
     public function execute(string $name): Campaign
     {
-        $campaign = Campaign::create([
+        return Campaign::create([
             'name' => $name,
         ]);
-
-        return $campaign;
     }
 }

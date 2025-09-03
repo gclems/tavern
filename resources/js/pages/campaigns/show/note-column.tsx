@@ -142,7 +142,7 @@ function NoteColumn({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTreeIt
 
                 <ScrollArea.Root className="flex-1 overflow-hidden">
                     <ScrollArea.Viewport className="max-h-full min-h-full overscroll-contain">
-                        <div {...tree.getContainerProps()} className="flex flex-col">
+                        <div {...tree.getContainerProps()} className="flex min-h-20 flex-col">
                             {tree.getItems().map((item) => (
                                 <div key={item.getId()} {...item.getProps()} onClick={() => {}} className="flex">
                                     <NoteNode item={item} onDelete={() => setNoteTreeItemToDelete(item)} />

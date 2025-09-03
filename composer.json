@@ -80,8 +80,10 @@
         "larastan": [
             "./vendor/bin/phpstan analyse --memory-limit=2G"
         ],
-        "pint": [
-            "./vendor/bin/pint"
+        "lint": [
+            "./vendor/bin/rector",
+            "./vendor/bin/pint",
+            "npm run lint"
         ]
     },
     "extra": {

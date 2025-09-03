@@ -21,7 +21,7 @@ class StoreNoteAction
 
         $sortOrder = $sortOrder !== null ? $sortOrder + 1 : 0;
 
-        $note = Note::create([
+        return Note::create([
             'name' => $name,
             'campaign_id' => $campaignId,
             'note_category_id' => $noteCategoryId,
@@ -29,7 +29,5 @@ class StoreNoteAction
             'privacy' => $privacy,
             'sort_order' => $sortOrder,
         ]);
-
-        return $note;
     }
 }

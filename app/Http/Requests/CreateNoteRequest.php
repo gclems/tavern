@@ -30,14 +30,14 @@ class CreateNoteRequest extends FormRequest
             'note_category_id' => [
                 'required',
                 'integer',
-                Rule::exists('App\Models\NoteCategory', 'id')->where(function (Builder $query) {
+                Rule::exists(\App\Models\NoteCategory::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('campaign')->id);
                 }),
             ],
             'note_id' => [
                 'nullable',
                 'integer',
-                Rule::exists('App\Models\Note', 'id')->where(function (Builder $query) {
+                Rule::exists(\App\Models\Note::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('campaign')->id)
                         ->where('note_category_id', $this->integer('note_category_id'));
                 }),
