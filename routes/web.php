@@ -18,7 +18,7 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->group(function (): void {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    Route::get('/', fn() => redirect()->route('campaigns.index'))->name('home');
+    Route::get('/', fn () => redirect()->route('campaigns.index'))->name('home');
 
     Route::resource('campaigns', CampaignsController::class)
         ->only([

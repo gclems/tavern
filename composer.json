@@ -82,6 +82,7 @@
         ],
         "lint": [
             "./vendor/bin/rector",
+            "./vendor/bin/phpstan analyse --memory-limit=2G",
             "./vendor/bin/pint",
             "npm run lint"
         ]
