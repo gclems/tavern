@@ -31,7 +31,7 @@ function AddNoteReferenceButton({ onSelectNote }: { onSelectNote?: (text: string
 
                 <SearchNote
                     onSelectNote={setSelectedNote}
-                    onDoubleClick={(note) => {
+                    onSubmit={(note) => {
                         submit(note);
                     }}
                 />

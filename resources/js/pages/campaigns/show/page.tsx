@@ -16,11 +16,10 @@ interface Props {
 }
 
 const CampaignsShowPage: React.FC<Props> = ({ campaign, noteCategories, notes }) => {
-    const handleNoteMove = ({ note, sort_order, parentNoteCategory, parentNote }: MoveNoteType) => {
+    const handleNoteMove = ({ note, parentNoteCategory, parentNote }: MoveNoteType) => {
         router.post(route('notes.move', { note: note.id }), {
             parentNoteCategoryId: parentNoteCategory?.id,
             parentNoteId: parentNote?.id,
-            sort_order,
         });
 
         return true;
