@@ -2174,8 +2174,8 @@ namespace PHPSTORM_META {
 'web','api',);
         registerArgumentsSet('routes', 'register','login',
 'logout','home','campaigns.index','campaigns.store','campaigns.show',
-'campaigns.update','campaigns.destroy','campaigns.notes.store','notes.update','notes.move',
-'storage.local',);
+'campaigns.update','campaigns.destroy','campaigns.notes.store','noteCategories.move','notes.update',
+'notes.destroy','notes.move','storage.local',);
         registerArgumentsSet('views', 
 'app','laravel-exceptions-renderer::components.card','laravel-exceptions-renderer::components.context','laravel-exceptions-renderer::components.editor','laravel-exceptions-renderer::components.header',
 'laravel-exceptions-renderer::components.icons.chevron-down','laravel-exceptions-renderer::components.icons.chevron-up','laravel-exceptions-renderer::components.icons.computer-desktop','laravel-exceptions-renderer::components.icons.moon','laravel-exceptions-renderer::components.icons.sun',
