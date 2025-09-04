@@ -11,7 +11,7 @@ return new class() extends Migration
      */
     public function up(): void
     {
-        Schema::table('note', function (Blueprint $table) {
+        Schema::table('notes', function (Blueprint $table) {
             $table->dropColumn('sort_order');
         });
     }
@@ -21,7 +21,7 @@ return new class() extends Migration
      */
     public function down(): void
     {
-        Schema::table('note', function (Blueprint $table) {
+        Schema::table('notes', function (Blueprint $table) {
             $table->unsignedSmallInteger('sort_order')->default(0);
         });
     }
