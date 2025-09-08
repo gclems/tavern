@@ -12,6 +12,7 @@ import { H4 } from './h4';
 import { Img } from './img';
 import { NoteLink } from './note-link';
 import { P } from './p';
+import { StatsTable } from './stats-table';
 import { Ul } from './ul';
 
 function customDirectives() {
@@ -25,6 +26,18 @@ function customDirectives() {
 
                         data.hName = hast?.tagName;
                         data.hProperties = hast?.properties;
+                        break;
+                    }
+                    case 'stats': {
+                        const data = node.data || (node.data = {});
+                        const hast = h(node.name, node.attributes || {});
+
+                        data.hName = hast?.tagName;
+                        data.hProperties = hast?.properties;
+                        console.log('node', data);
+                        console.log('data', data);
+                        console.log('hast', hast);
+                        console.log('properties', data.hProperties);
                         break;
                     }
                     default:
@@ -56,6 +69,10 @@ function DndMarkdown({ markdown, allowTooltips = true }: { markdown: string; all
                             {children}
                         </NoteLink>
                     ),
+                    stats: ({ node, children }) => {
+                        const [str, dex, con, int, wis, cha] = node.children[0]?.value?.split(',') ?? [0, 0, 0, 0, 0, 0];
+                        return <StatsTable str={str} dex={dex} con={con} int={int} wis={wis} cha={cha} />;
+                    },
                 }}
             >
                 {markdown}

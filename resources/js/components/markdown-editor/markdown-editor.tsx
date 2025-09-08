@@ -6,6 +6,7 @@ import { Button, Separator, SimpleTooltip, Textarea } from 'shanty-ui';
 import { AddImageButton } from './add-image-button';
 import { AddLinkButton } from './add-link-button';
 import { AddNoteReferenceButton } from './add-note-reference-button';
+import { AddStatsBlockButton } from './add-stats-block-button';
 
 type TextMutation = {
     newText: string;
@@ -175,6 +176,7 @@ function MarkdownEditor({ value, defaultValue, onChange, ...textareaProps }: Com
                 <AddImageButton onSubmit={(text) => decorateSelection(text, 'replace')} />
                 <Separator orientation="vertical" className="bg-dnd-primary/20 mx-2 h-[80%] w-px" />
                 <AddNoteReferenceButton onSelectNote={(text) => decorateSelection(text, 'replace')} />
+                <AddStatsBlockButton onSubmit={(text) => decorateSelection(text, 'replace')} />
             </div>
             <Textarea ref={textarea} {...textareaProps} value={markdown as string} onChange={handleTextareaChange} />
         </>
