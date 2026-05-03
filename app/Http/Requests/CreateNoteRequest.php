@@ -3,7 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Enums\Privacy;
+use App\Models\Note;
+use App\Models\NoteCategory;
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -21,7 +24,7 @@ class CreateNoteRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -30,14 +33,14 @@ class CreateNoteRequest extends FormRequest
             'note_category_id' => [
                 'required',
                 'integer',
-                Rule::exists(\App\Models\NoteCategory::class, 'id')->where(function (Builder $query): void {
+                Rule::exists(NoteCategory::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('campaign')->id);
                 }),
             ],
             'note_id' => [
                 'nullable',
                 'integer',
-                Rule::exists(\App\Models\Note::class, 'id')->where(function (Builder $query): void {
+                Rule::exists(Note::class, 'id')->where(function (Builder $query): void {
                     $query->where('campaign_id', $this->route('campaign')->id)
                         ->where('note_category_id', $this->integer('note_category_id'));
                 }),

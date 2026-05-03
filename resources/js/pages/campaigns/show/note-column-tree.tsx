@@ -105,7 +105,13 @@ function NoteColumnTree({ categoryTreeItem }: { categoryTreeItem: NoteCategoryTr
             <div {...tree.getContainerProps()} className="flex min-h-20 flex-col">
                 {tree.getItems().map((item) => (
                     <div key={item.getId()} {...item.getProps()} onClick={() => {}} className="flex">
-                        <NoteNode item={item} onDelete={() => setNoteTreeItemToDelete(item)} />
+                        <NoteNode
+                            item={item}
+                            onDelete={() => setNoteTreeItemToDelete(item)}
+                            onDuplicate={() => {
+                                handleDuplicateNote(item.getItemData());
+                            }}
+                        />
                     </div>
                 ))}
                 <div style={tree.getDragLineStyle()} className="bg-dnd-primary h-1" />

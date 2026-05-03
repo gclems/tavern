@@ -1,5 +1,5 @@
 import { ItemInstance } from '@headless-tree/core';
-import { SquareMinusIcon, SquarePlusIcon, TrashIcon } from 'lucide-react';
+import { CopyIcon, SquareMinusIcon, SquarePlusIcon, TrashIcon } from 'lucide-react';
 import { cn, SimpleContextMenu } from 'shanty-ui';
 
 import { HeadlessTreeItem } from '@/types/headless-tree-item';
@@ -9,7 +9,7 @@ import { NoteTreeItem } from '@/types/note-tree-item';
 import { useCampaign } from './campaign-provider';
 import { CreateNoteButton } from './create-note-button';
 
-function NoteNode({ item, onDelete }: { item: ItemInstance<HeadlessTreeItem>; onDelete: () => void }) {
+function NoteNode({ item, onDelete, onDuplicate }: { item: ItemInstance<HeadlessTreeItem>; onDelete: () => void; onDuplicate: () => void }) {
     const { campaign, selectedTreeItemId, selectedNote, selectTreeItem, unSelectTreeItem } = useCampaign();
 
     const treeItem = item.getItemData() as NoteTreeItem;
@@ -85,8 +85,12 @@ function NoteNode({ item, onDelete }: { item: ItemInstance<HeadlessTreeItem>; on
                     }
                 />
                 <SimpleContextMenu.Popup>
+                    <SimpleContextMenu.Item onClick={() => onDuplicate?.()}>
+                        <CopyIcon /> Dupliquer
+                    </SimpleContextMenu.Item>
+                    <SimpleContextMenu.Separator />
                     <SimpleContextMenu.Item onClick={() => onDelete?.()}>
-                        <TrashIcon /> Delete
+                        <TrashIcon /> Supprimer
                     </SimpleContextMenu.Item>
                 </SimpleContextMenu.Popup>
             </SimpleContextMenu.Root>

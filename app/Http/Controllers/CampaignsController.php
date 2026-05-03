@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Privacy;
 use App\Http\Requests\CreateCampaignRequest;
 use App\Models\Campaign;
 use App\Services\CampaignService;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -13,7 +15,25 @@ use Inertia\Response;
 
 class CampaignsController extends Controller
 {
-    public function __construct(protected CampaignService $campaignService) {}
+    public function __construct(protected CampaignService $campaignService)
+    {
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Campaign $campaign): Response
+    {
+        Gate::authorize('view', $campaign);
+
+        return Inertia::render('campaigns/show/page', [
+            'campaign' => $campaign,
+            'noteCategories' => $campaign->noteCategories()->orderBy('sort_order')->get(),
+            'notes' => $campaign->notes()
+                ->orderBy('created_at', 'desc')
+                ->get(),
+        ]);
+    }
 
     /**
      * Display a listing of the resource.
@@ -33,20 +53,6 @@ class CampaignsController extends Controller
         $campaign = $this->campaignService->create($request->user(), $request->string('name'));
 
         return redirect(route('campaigns.show', $campaign));
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Campaign $campaign): Response
-    {
-        Gate::authorize('view', $campaign);
-
-        return Inertia::render('campaigns/show/page', [
-            'campaign' => $campaign,
-            'noteCategories' => $campaign->noteCategories()->orderBy('sort_order')->get(),
-            'notes' => $campaign->notes()->orderBy('created_at', 'desc')->get(),
-        ]);
     }
 
     /**

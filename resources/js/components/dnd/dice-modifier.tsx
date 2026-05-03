@@ -1,4 +1,4 @@
-import { sign } from '@/helpers/stringHelper';
+import { sign } from '@/helpers/strings';
 
 function DiceModifier({ number }: { number: number | null | undefined }) {
     if (!number) return null;
