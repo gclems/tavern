@@ -3,9 +3,8 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import { setDefaultOptions } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { cn, Providers } from 'shanty-ui';
+import { cn, ShantyRoot } from 'shanty-ui';
 
-import { useCookie } from '@/hooks/use-cookie';
 import useFlashToast from '@/hooks/use-flash-toast';
 import { useRefreshOnTabFocus } from '@/hooks/use-refresh-on-focus';
 
@@ -26,15 +25,15 @@ const InnerBaseLayout: React.FC<Props> = ({ title = '', children, className }) =
 };
 
 const BaseLayout = (props: Props) => {
-    const sidebarState = useCookie('sidebar_state');
+    // const sidebarState = useCookie('sidebar_state');
 
     useRefreshOnTabFocus(10); // Refresh the page if the tab is inactive for 10 minutes
     setDefaultOptions({ locale: fr });
 
     return (
-        <Providers sidebar={{ defaultOpen: sidebarState === 'true' }}>
+        <ShantyRoot tooltip toast sidebar>
             <InnerBaseLayout {...props} />
-        </Providers>
+        </ShantyRoot>
     );
 };
 
